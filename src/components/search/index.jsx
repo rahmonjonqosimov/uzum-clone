@@ -1,40 +1,16 @@
 import { useState } from "react";
+import { useGetProductsQuery } from "../../redux/api/productApi";
+import "./index.scss";
 import { useNavigate } from "react-router-dom";
 
 function Search() {
-  const [data, setData] = useState([]);
-  const [filter, setFilter] = useState([]);
-  const navigat = useNavigate();
-
-  const fetchPost = async () => {
-    const response = await myAxios.get("product");
-    return response?.data;
-  };
+  const navigate = useNavigate();
+  const [value, setValue] = useState("");
+  const { data } = useGetProductsQuery({ search: value });
   const handelSabmit = (e) => {
     e.preventDefault();
-    setData([]);
   };
-
-  const handelChange = (value) => {
-    const trimmedValue = value.trim();
-    const res = filter?.filter((el) =>
-      el?.dec?.toLowerCase().includes(trimmedValue)
-    );
-    setData(res);
-    if (trimmedValue === "") {
-      setData([]);
-    }
-  };
-
-  const handelSearch = (value, type) => {
-    navigat(`/search?query=${value}`);
-    localStorage.setItem("type", JSON.stringify(type));
-    setLoading(true);
-    setData([]);
-  };
-  const handelInput = () => {
-    localStorage.setItem("text", JSON.stringify("Katalog"));
-  };
+  console.log(data?.data?.products);
 
   const svg = (
     <svg
@@ -68,18 +44,13 @@ function Search() {
   return (
     <div className={`search_container `}>
       <form className="nav-form" onSubmit={handelSabmit}>
-        <span
-          className="search_ico"
-          onClick={() => (setActive1(false), setData([]))}
-        >
-          {search}
-        </span>
+        <span className="search_ico">{search}</span>
         <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           type="text"
           placeholder="Mahsulotlar va turkumlarini izlash"
           className="nav-item-input"
-          onChange={(e) => handelChange(e.target.value)}
-          onClick={handelInput}
         />
         <button className="btn" type="submit">
           <svg
@@ -92,28 +63,29 @@ function Search() {
           </svg>
         </button>
       </form>
-      <div
-        className="search-result"
-        style={{
-          height: data?.length > 10 ? "450px" : "auto",
-          overflowY: data?.length > 8 ? "scroll" : "hidden",
-          display: data?.length === 0 ? "none" : "block",
-        }}
-      >
-        {data?.map((item, index) => (
-          <div key={index} onClick={() => (setActive1(false), setData([]))}>
-            <p
-              className="result_p"
-              onClick={() => handelSearch(item?.dec, item?.type)}
-            >
-              <span className="svg_serch">{svg} </span>
-              {item?.dec?.length > 50
-                ? `${item?.dec?.substring(0, 50)}...`
-                : item?.dec}
-            </p>
-          </div>
-        ))}
-      </div>
+      {/* <input type="text" className="search__inp" /> */}
+      {value.trim() ? (
+        <div className="search-result">
+          {data?.data?.products?.map((item, index) => (
+            <>
+              <div key={index}>
+                <p
+                  onClick={() => {
+                    navigate(`/product/${item?.id}`), setValue("");
+                  }}
+                  className="result_p"
+                >
+                  <span className="svg_serch">{svg} </span>
+                  {item?.title.slice(0, 50) + "..."}
+                </p>
+              </div>
+              <div className="serach__line"></div>
+            </>
+          ))}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

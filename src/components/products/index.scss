@@ -1634,3 +1634,36 @@ input {
     margin-bottom: 5px;
   }
 }
+
+@media screen and (max-width: 580px) {
+  .detail__content {
+    max-width: 350px;
+    width: 100%;
+    .lik {
+      left: 190px;
+      top: -14px;
+    }
+    .clas {
+      max-width: 500px;
+      width: 100%;
+      .content {
+        width: 100%;
+        .conimg {
+          .detail__image {
+            width: 100%;
+            object-fit: contain;
+          }
+        }
+      }
+    }
+    .sev {
+      margin-left: 300px;
+    }
+    .detail__image__swiper {
+      width: 285px;
+      height: 230px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+  }
+}

@@ -7,10 +7,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { useNavigate } from "react-router-dom";
 
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 
 const Detail = ({ product }) => {
+  const navigate = useNavigate();
+
   const { id, category, description, price, title, units, urls } = product;
   const swiperItem = urls?.map((image, inx) => (
     <SwiperSlide key={inx} className="slider__item">
